@@ -6,9 +6,11 @@ import ichttt.mods.firstaid.api.damagesystem.AbstractPlayerDamageModel;
 import ichttt.mods.firstaid.common.network.MessagePlayHurtSound;
 import ichttt.mods.firstaid.common.network.MessageSyncDamageModel;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLeaves;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
@@ -68,9 +70,16 @@ public class BumpMain {
             EntityPlayerMP player = (EntityPlayerMP) event.player;
             if (player.motionY != -0.0784000015258789) {
                 BlockPos bPos = new BlockPos(player.getPosition().getX(), player.getEntityBoundingBox().maxY + 0.2, player.getPosition().getZ());
-                if (!player.world.getBlockState(bPos).getMaterial().isLiquid() && !player.world.getBlockState(bPos).getBlock().isAir(player.world.getBlockState(bPos), player.world, bPos)) {
-                    float damage = 1.0f;
-                    applyHeadDamage(player, damage);
+                if (!player.world.getBlockState(bPos).getMaterial().isLiquid() && !player.world.getBlockState(bPos).getBlock().isAir(player.world.getBlockState(bPos), player.world, bPos) && !(player.world.getBlockState(bPos).getBlock() == Blocks.WEB)) {
+                    if(isPassableLeavesLoaded()) {
+                        if(!(player.world.getBlockState(bPos).getBlock() instanceof BlockLeaves)) {
+                            float damage = 1.0f;
+                            applyHeadDamage(player, damage);
+                        }
+                    } else {
+                        float damage = 1.0f;
+                        applyHeadDamage(player, damage);
+                    }
                 }
             }
         }
@@ -109,4 +118,5 @@ public class BumpMain {
     private boolean isFirstAidLoaded() {
         return net.minecraftforge.fml.common.Loader.isModLoaded("firstaid");
     }
+    private boolean isPassableLeavesLoaded(){return net.minecraftforge.fml.common.Loader.isModLoaded("passableleaves");}
 }
