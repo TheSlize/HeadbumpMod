@@ -65,7 +65,7 @@ public class BumpMain {
         if (!event.player.world.isRemote && event.phase == TickEvent.Phase.END) {
             EntityPlayerMP player = (EntityPlayerMP) event.player;
             if(!player.isPlayerSleeping()) {
-                if (player.motionY != -0.0784000015258789) {
+                if (player.motionY != -0.0784000015258789 && !player.onGround && !player.isOnLadder() && !player.isElytraFlying()) {
                     BlockPos bPos = new BlockPos(player.getPosition().getX(), player.getEntityBoundingBox().maxY + 0.2, player.getPosition().getZ());
                     if (!player.world.getBlockState(bPos).getMaterial().isLiquid() && !player.world.getBlockState(bPos).getBlock().isAir(player.world.getBlockState(bPos), player.world, bPos) && !(player.world.getBlockState(bPos).getBlock() == Blocks.WEB)) {
                         if(CommonConfig.useArmor && !player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty()){
